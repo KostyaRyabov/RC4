@@ -1,9 +1,16 @@
-image:
-  - Visual Studio 2017
-clone_folder: c:\projects\source
+version: 1.0.{build}
+image: Visual Studio 2019
+init:
+- ps: ''
+install:
+- ps: >-
+    (New-Object Net.WebClient).DownloadFile('https://platform.activestate.com/dl/cli/install.ps1', 'install.ps1')
+
+    Invoke-Expression "install.ps1 -n"
 build_script:
+- cmd: state --version
+test_script:
 - cmd: >-
-    mkdir build
-    cd build
-    cmake c:\projects\source -G "Visual Studio 15 2017 Win64"
-    cmake --build . --config "Debug"
+    state run lints
+
+    state run tests
